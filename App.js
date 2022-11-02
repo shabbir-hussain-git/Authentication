@@ -7,7 +7,9 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import { Colors } from './constants/styles';
 import { StatusBar } from 'react-native';
 import AuthStore from './store/store'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import {getData,removeData} from './Services/Storage';
+
 const Stack = createNativeStackNavigator();
 
 function AuthStack() {
@@ -45,11 +47,26 @@ function Navigation() {
   const updateLoginState = (state)=>{
     isLoginHandler(state);
   }
+  const logout = async ()=>{
+    await removeData("sKey");
+    isLoginHandler(false);
+  }
+  useEffect(()=>{
+    const getSessionKey = async (key)=>{
+      let d = await getData(key);
+      console.log(d);
+      if(d){
+        isLoginHandler(true)
+      }
+    }
+    getSessionKey("sKey")
+  },[])
   return (
     <NavigationContainer>
       <AuthStore.Provider value={{
         isLogin:isLogin,
-        updateLoginState:updateLoginState
+        updateLoginState:updateLoginState,
+        logout:logout
       }}>
        {!isLogin && <AuthStack /> }
        {isLogin && <AuthenticatedStack /> }

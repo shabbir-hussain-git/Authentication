@@ -2,7 +2,8 @@ import React from "react";
 
 const initialValue = {
     isLogin:false,
-    updateLoginState:()=>{}
+    updateLoginState:()=>{},
+    logout:()=>{}
 }
 const AuthStore = React.createContext(initialValue);
 
